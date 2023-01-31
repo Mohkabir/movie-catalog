@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { MovieDto } from './dtos/create-movie.dto';
 
 @Injectable()
 export class CatalogueService {
-  create(body) {
+  catalogue = [];
+
+  create(body): MovieDto {
     console.log(body, 'create');
+    this.catalogue.push(body);
+    return body;
   }
 
   find() {
-    console.log('find');
+    return this.catalogue;
   }
 
   findOne(id) {

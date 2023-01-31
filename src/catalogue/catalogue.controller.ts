@@ -10,31 +10,31 @@ import {
 import { CatalogueService } from './catalogue.service';
 import { MovieDto } from './dtos/create-movie.dto';
 
-@Controller('catalogue')
+@Controller('/api/v1/movie')
 export class CatalogueController {
   constructor(private catalogueService: CatalogueService) {}
 
-  @Post('/api/v1/movie')
+  @Post('/')
   addMovie(@Body() body: MovieDto) {
     return this.catalogueService.create(body);
   }
 
-  @Get('/api/v1/movie')
+  @Get('/')
   getMovies() {
     return this.catalogueService.find();
   }
 
-  @Get('/api/v1/movie/:id')
+  @Get('/:id')
   getMovie(@Param() param: string) {
     return this.catalogueService.findOne(param);
   }
 
-  @Delete('/api/v1/movie/:id')
+  @Delete('/:id')
   deleteMovie(@Param() param: string) {
     return this.catalogueService.remove(param);
   }
 
-  @Patch('/api/v1/movie/:id')
+  @Patch('/:id')
   updateMovie(@Body() body: MovieDto, @Param() param: string) {
     return this.catalogueService.update(body, param);
   }
