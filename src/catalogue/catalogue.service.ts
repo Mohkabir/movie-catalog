@@ -1,18 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { MovieDto } from './dtos/create-movie.dto';
-
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Catalogue } from './catalogue.entity';
 @Injectable()
 export class CatalogueService {
-  catalogue = [];
+  constructor(
+    @InjectRepository(Catalogue) private repo: Repository<Catalogue>,
+  ) {}
 
-  create(body): MovieDto {
-    console.log(body, 'create');
-    this.catalogue.push(body);
-    return body;
+  async create(body) {
+    const movie = this.repo.create({ ...body });
+    await this.repo.save(movie);
+    return movie;
   }
 
-  find() {
-    return this.catalogue;
+  async find() {
+    const movie = await this.repo.find();
+    return {
+      count: movie.length,
+      movie,
+    };
   }
 
   findOne(id) {

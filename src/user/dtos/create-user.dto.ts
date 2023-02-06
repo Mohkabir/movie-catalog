@@ -10,3 +10,16 @@ export class UserDto {
   @IsString()
   password: string;
 }
+
+export class SignInDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  password: string;
+}
+
+export enum UserRole {
+  CUSTOMER = 'CUSTOMER',
+  ADMIN = 'ADMIN',
+}
