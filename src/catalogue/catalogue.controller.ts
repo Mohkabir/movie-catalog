@@ -6,16 +6,27 @@ import {
   Param,
   Patch,
   Post,
+  Req,
+  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { UserRole } from 'src/user/dtos/create-user.dto';
 import { CatalogueService } from './catalogue.service';
 import { MovieDto } from './dtos/create-movie.dto';
 
 @Controller('/api/v1/movie')
+@UseGuards(AuthGuard())
 export class CatalogueController {
   constructor(private catalogueService: CatalogueService) {}
 
   @Post('/')
-  addMovie(@Body() body: MovieDto) {
+  addMovie(@Req() req, @Body() body: MovieDto) {
+    if (req.user.role !== UserRole.ADMIN) {
+      throw new UnauthorizedException(
+        `user with role ${req.user.role} is Unauthorized`,
+      );
+    }
     return this.catalogueService.create(body);
   }
 
@@ -25,17 +36,27 @@ export class CatalogueController {
   }
 
   @Get('/:id')
-  getMovie(@Param() param: string) {
+  getMovie(@Param() param: string): Promise<MovieDto> {
     return this.catalogueService.findOne(param);
   }
 
   @Delete('/:id')
-  deleteMovie(@Param() param: string) {
+  deleteMovie(@Req() req, @Param() param: string) {
+    if (req.user.role !== UserRole.ADMIN) {
+      throw new UnauthorizedException(
+        `user with role ${req.user.role} is Unauthorized`,
+      );
+    }
     return this.catalogueService.remove(param);
   }
 
   @Patch('/:id')
-  updateMovie(@Body() body: MovieDto, @Param() param: string) {
+  updateMovie(@Req() req, @Body() body: MovieDto, @Param() param: string) {
+    if (req.user.role !== UserRole.ADMIN) {
+      throw new UnauthorizedException(
+        `user with role ${req.user.role} is Unauthorized`,
+      );
+    }
     return this.catalogueService.update(body, param);
   }
 }

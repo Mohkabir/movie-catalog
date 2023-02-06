@@ -9,6 +9,9 @@ export class UserDto {
 
   @IsString()
   password: string;
+
+  @IsString()
+  role: UserRole;
 }
 
 export class SignInDto {

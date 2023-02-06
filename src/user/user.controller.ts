@@ -1,13 +1,14 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  Param,
-  Patch,
   Post,
+  Req,
+  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
-import { SignInDto, UserDto } from './dtos/create-user.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { SignInDto, UserDto, UserRole } from './dtos/create-user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -26,11 +27,13 @@ export class UserController {
   }
 
   @Get('/users')
-  find() {
+  @UseGuards(AuthGuard())
+  find(@Req() req: any) {
+    if (req.user.role !== UserRole.ADMIN) {
+      throw new UnauthorizedException(
+        `user with role ${req.user.role} is Unauthorized`,
+      );
+    }
     return this.userService.find();
   }
-  //   @Get('/users')
-  //   findOne(id: number): Promise<Users> {
-  //     return this.repo.findOne(id);
-  //   }
 }

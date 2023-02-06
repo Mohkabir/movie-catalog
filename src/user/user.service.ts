@@ -20,8 +20,7 @@ export class UserService {
   ) {}
 
   async signUp(body) {
-    const { email, password, name } = body;
-    const role = UserRole.CUSTOMER;
+    const { email, password, name, role } = body;
     const salt = await bcrypt.genSalt();
     const hashed = await bcrypt.hash(password, salt);
     const user = this.repo.create({ email, password: hashed, name, role });
