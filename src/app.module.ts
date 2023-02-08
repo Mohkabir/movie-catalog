@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CatalogueModule } from './catalogue/catalogue.module';
-import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Catalogue } from './catalogue/catalogue.entity';
-import { User } from './user/user.entity';
+import { User } from './dal/user.entity';
+import { CatalogueModule } from './controllers/catalogue/catalogue.module';
+import { Movie } from './dal/movie.entity';
+import { AccountModule } from './controllers/account/account.module';
+import { UserModule } from './services/user/user.module';
 
 @Module({
   imports: [
@@ -18,9 +19,10 @@ import { User } from './user/user.entity';
       username: 'postgres',
       autoLoadEntities: true,
       synchronize: true,
-      entities: [Catalogue, User],
+      entities: [Movie, User],
     }),
     CatalogueModule,
+    AccountModule,
     UserModule,
   ],
 

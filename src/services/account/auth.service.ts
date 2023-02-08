@@ -2,18 +2,18 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
+  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
-import { SignInDto, UserDto, UserRole } from './dtos/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/dal/user.entity';
+import { SignInDto, UserRole } from './dtos/create-user.dto';
 
 @Injectable()
-export class UserService {
+export class AuthService {
   constructor(
     @InjectRepository(User) private repo: Repository<User>,
     private Jwtservice: JwtService,
@@ -48,11 +48,11 @@ export class UserService {
     }
   }
 
-  async find() {
-    const user = await this.repo.find();
-    return {
-      count: user.length,
-      users: user,
-    };
+  isAdmin(req) {
+    if (req.user.role !== UserRole.ADMIN) {
+      throw new UnauthorizedException(
+        `user with role ${req.user.role} is Unauthorized`,
+      );
+    }
   }
 }
