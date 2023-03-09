@@ -1,4 +1,5 @@
 import { IsString, IsEmail } from 'class-validator';
+import { UserRole } from 'src/enums';
 
 export class UserDto {
   @IsString()
@@ -20,9 +21,4 @@ export class SignInDto {
 
   @IsString()
   password: string;
-}
-
-export enum UserRole {
-  CUSTOMER = 'CUSTOMER',
-  ADMIN = 'ADMIN',
 }

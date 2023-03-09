@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/dal/user.entity';
+import { UserRepository } from 'src/repository/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private repo: Repository<User>) {}
+  constructor(@InjectRepository(UserRepository) private repo: UserRepository) {}
 
   async getMe(id: string): Promise<User> {
     const user = await this.repo.findOneBy({ id: +id });

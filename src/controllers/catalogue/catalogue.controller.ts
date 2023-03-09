@@ -24,6 +24,7 @@ export class CatalogueController {
     private movieService: MovieService,
     private authService: AuthService,
   ) {}
+
   @Post('/movie')
   addMovie(@Req() req, @Body() movieDto: MovieDto) {
     this.authService.isAdmin(req);

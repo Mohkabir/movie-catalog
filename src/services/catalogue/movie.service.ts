@@ -4,10 +4,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MovieDto } from './dtos/create-movie.dto';
 import { MovieUpdateDto } from './dtos/update-movie.dto';
 import { Movie } from 'src/dal/movie.entity';
+import { MovieRepository } from 'src/repository/movie.repository';
 
 @Injectable()
 export class MovieService {
-  constructor(@InjectRepository(Movie) private repo: Repository<Movie>) {}
+  constructor(
+    @InjectRepository(MovieRepository)
+    private repo: MovieRepository,
+  ) {}
 
   async create(movieDto: MovieDto) {
     const movie = this.repo.create({ ...movieDto });
