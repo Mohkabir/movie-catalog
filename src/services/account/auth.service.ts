@@ -1,35 +1,38 @@
 import {
-  ConflictException,
   Injectable,
-  InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { SignInDto } from './dtos/create-user.dto';
-import { UserRepository } from 'src/repository/user.repository';
-import { UserRole } from 'src/enums';
 import { User } from 'src/dal/user.entity';
+import { SignInDto, UserDto, UserRole } from './dtos/create-user.dto';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(UserRepository) private userRepository: UserRepository,
     private Jwtservice: JwtService,
+    private userService: UserService,
   ) {}
 
-  async signUp(body): Promise<User> {
-    const user = await this.userRepository.signUp(body);
+  async signUp(body: UserDto): Promise<User> {
+    const { email, password, name, role } = body;
+    const salt = await bcrypt.genSalt();
+    const hashed = await bcrypt.hash(password, salt);
+    const newUser = {
+      email,
+      password: hashed,
+      name,
+      role,
+    };
+    const user = this.userService.createUser(newUser);
     return user;
   }
 
   async signIn(body: SignInDto): Promise<{ token: string }> {
     const { email, password } = body;
-    const user = await this.userRepository.findOne({
-      email: email,
-    });
-    console.log(user, 'here2');
+    const user = await this.userService.getUserByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { email };
       const token: string = this.Jwtservice.sign(payload);
@@ -48,6 +51,6 @@ export class AuthService {
   }
 
   logout() {
-    return 'logged out';
+    return { msg: 'logged out' };
   }
 }

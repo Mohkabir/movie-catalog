@@ -1,21 +1,28 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MovieDto } from './dtos/create-movie.dto';
 import { MovieUpdateDto } from './dtos/update-movie.dto';
 import { Movie } from 'src/dal/movie.entity';
-import { MovieRepository } from 'src/repository/movie.repository';
 
 @Injectable()
 export class MovieService {
-  constructor(
-    @InjectRepository(MovieRepository)
-    private repo: MovieRepository,
-  ) {}
+  constructor(@InjectRepository(Movie) private repo: Repository<Movie>) {}
 
   async create(movieDto: MovieDto) {
     const movie = this.repo.create({ ...movieDto });
     await this.repo.save(movie);
+    try {
+      await this.repo.save(movie);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Something went wrong try again later..',
+      );
+    }
     return movie;
   }
 

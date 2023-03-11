@@ -10,9 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { MovieDto } from '../../services/catalogue/dtos/create-movie.dto';
-import { MovieUpdateDto } from '../../services/catalogue/dtos/update-movie.dto';
-import { MovieService } from 'src/services/catalogue/movie.service';
+import { MovieDto } from '../../services/movie/dtos/create-movie.dto';
+import { MovieUpdateDto } from '../../services/movie/dtos/update-movie.dto';
+import { MovieService } from 'src/services/movie/movie.service';
 import { AuthService } from 'src/services/account/auth.service';
 
 @Controller('/catalogue')
@@ -22,7 +22,6 @@ export class CatalogueController {
     private movieService: MovieService,
     private authService: AuthService,
   ) {}
-
   @Post('/movie')
   addMovie(@Req() req, @Body() movieDto: MovieDto) {
     this.authService.isAdmin(req);
