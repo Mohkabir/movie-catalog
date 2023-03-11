@@ -8,7 +8,7 @@ export class UserService {
   constructor(@InjectRepository(UserRepository) private repo: UserRepository) {}
 
   async getMe(id: string): Promise<User> {
-    const user = await this.repo.findOneBy({ id: +id });
+    const user = await this.repo.findOne({ id: +id });
     if (!user) {
       throw new NotFoundException(`user with id ${id} is not available`);
     }

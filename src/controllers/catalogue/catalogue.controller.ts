@@ -7,11 +7,9 @@ import {
   Patch,
   Post,
   Req,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { UserRole } from 'src/services/account/dtos/create-user.dto';
 import { MovieDto } from '../../services/catalogue/dtos/create-movie.dto';
 import { MovieUpdateDto } from '../../services/catalogue/dtos/update-movie.dto';
 import { MovieService } from 'src/services/catalogue/movie.service';

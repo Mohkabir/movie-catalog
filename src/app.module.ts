@@ -8,6 +8,7 @@ import { Movie } from './dal/movie.entity';
 import { AccountModule } from './controllers/account/account.module';
 import { UserModule } from './services/user/user.module';
 import { CinemaModule } from './services/cinema/cinema.module';
+import { AuthModule } from './services/account/auth.module';
 
 @Module({
   imports: [

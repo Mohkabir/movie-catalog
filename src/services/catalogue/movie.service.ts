@@ -28,7 +28,7 @@ export class MovieService {
   }
 
   async findOne(param: object): Promise<MovieDto> {
-    const movie = await this.repo.findOneBy(param);
+    const movie = await this.repo.findOne(param);
     if (!movie) {
       throw new NotFoundException(`movie id is not available`);
     }
