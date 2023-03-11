@@ -7,6 +7,8 @@ import { CatalogueModule } from './controllers/catalogue/catalogue.module';
 import { Movie } from './dal/movie.entity';
 import { AccountModule } from './controllers/account/account.module';
 import { UserModule } from './services/user/user.module';
+import { CinemaModule } from './services/cinema/cinema.module';
+import { Cinema } from './dal/cinema';
 
 @Module({
   imports: [
@@ -19,11 +21,12 @@ import { UserModule } from './services/user/user.module';
       username: 'postgres',
       autoLoadEntities: true,
       synchronize: true,
-      entities: [Movie, User],
+      entities: [Movie, User, Cinema],
     }),
     CatalogueModule,
     AccountModule,
     UserModule,
+    CinemaModule,
   ],
 
   controllers: [AppController],
