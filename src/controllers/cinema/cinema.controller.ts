@@ -15,7 +15,7 @@ import { User } from 'src/dal/user.entity';
 import { CinemaService } from 'src/services/cinema/cinema.service';
 import { CinemaDto } from 'src/services/cinema/create-cinema.dto';
 import { Cinema } from 'src/dal/cinema';
-import { AuthService } from 'src/services/account/auth.service';
+import { AuthService } from 'src/services/auth/auth.service';
 
 @Controller('/cinema')
 @UseGuards(AuthGuard())

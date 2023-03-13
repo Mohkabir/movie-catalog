@@ -42,7 +42,6 @@ export class CinemaService {
 
   async update(updatedCinema: CinemaDto, param: any): Promise<Cinema> {
     const { id } = param;
-    console.log(id);
     const cinema = await this.repo.findOne({ id: +id });
     const updated = Object.assign(cinema, updatedCinema);
     await this.repo.save(updated);
