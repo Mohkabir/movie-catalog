@@ -14,6 +14,9 @@ import { MovieDto } from '../../services/movie/dtos/create-movie.dto';
 import { MovieUpdateDto } from '../../services/movie/dtos/update-movie.dto';
 import { MovieService } from 'src/services/movie/movie.service';
 import { AuthService } from 'src/services/auth/auth.service';
+import { User } from 'src/dal/user.entity';
+import { GetUser } from 'src/services/auth/custom-decorators/get-user.decorator';
+import { IsAdmin } from 'src/services/auth/custom-decorators/isAdmin.decorator';
 
 @Controller('/catalogue')
 export class CatalogueController {
@@ -24,9 +27,12 @@ export class CatalogueController {
 
   @Post('/movie')
   @UseGuards(AuthGuard())
-  addMovie(@Req() req, @Body() movieDto: MovieDto) {
-    this.authService.isAdmin(req);
-    return this.movieService.create(movieDto);
+  addMovie(
+    @IsAdmin() isAdmin,
+    @Body() movieDto: MovieDto,
+    @GetUser() user: User,
+  ) {
+    return this.movieService.create(movieDto, user);
   }
 
   @Get('/movie')
@@ -41,19 +47,17 @@ export class CatalogueController {
 
   @Delete('/movie/:id')
   @UseGuards(AuthGuard())
-  deleteMovie(@Req() req, @Param() param: object) {
-    this.authService.isAdmin(req);
+  deleteMovie(@IsAdmin() isAdmin, @Param() param: object) {
     return this.movieService.remove(param);
   }
 
   @Patch('/movie/:id')
   @UseGuards(AuthGuard())
   updateMovie(
-    @Req() req,
+    @IsAdmin() isAdmin,
     @Body() movieUpdateDto: MovieUpdateDto,
     @Param() param: object,
   ) {
-    this.authService.isAdmin(req);
     return this.movieService.update(movieUpdateDto, param);
   }
 }

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class Movie {
@@ -37,4 +38,7 @@ export class Movie {
 
   @Column()
   description: string;
+
+  @ManyToOne((_type) => User, (user) => user.movies, { eager: false })
+  user: User;
 }

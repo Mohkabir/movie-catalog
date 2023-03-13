@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Movie } from './movie.entity';
 
 @Entity()
 export class User {
@@ -16,4 +17,7 @@ export class User {
 
   @Column()
   role: string;
+
+  @OneToMany((_type) => Movie, (movie) => movie.user, { eager: true })
+  movies: Movie[];
 }
