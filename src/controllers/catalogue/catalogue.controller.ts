@@ -17,6 +17,7 @@ import { AuthService } from 'src/services/auth/auth.service';
 import { User } from 'src/dal/user.entity';
 import { GetUser } from 'src/services/auth/custom-decorators/get-user.decorator';
 import { IsAdmin } from 'src/services/auth/custom-decorators/isAdmin.decorator';
+import { idParam } from 'src/interface/index.ts';
 
 @Controller('/catalogue')
 export class CatalogueController {
@@ -41,14 +42,16 @@ export class CatalogueController {
   }
 
   @Get('/movie/:id')
-  getMovie(@Param() param: object): Promise<MovieDto> {
-    return this.movieService.findOne(param);
+  getMovie(@Param() param: idParam): Promise<MovieDto> {
+    const { id } = param;
+    return this.movieService.findOne(+id);
   }
 
   @Delete('/movie/:id')
   @UseGuards(AuthGuard())
-  deleteMovie(@IsAdmin() isAdmin, @Param() param: object) {
-    return this.movieService.remove(param);
+  deleteMovie(@IsAdmin() isAdmin, @Param() param: idParam) {
+    const { id } = param;
+    return this.movieService.remove(+id);
   }
 
   @Patch('/movie/:id')
@@ -56,8 +59,16 @@ export class CatalogueController {
   updateMovie(
     @IsAdmin() isAdmin,
     @Body() movieUpdateDto: MovieUpdateDto,
-    @Param() param: object,
+    @Param() param: idParam,
   ) {
-    return this.movieService.update(movieUpdateDto, param);
+    const { id } = param;
+    return this.movieService.update(movieUpdateDto, +id);
+  }
+
+  @Post('/movie/watchlist')
+  @UseGuards(AuthGuard())
+  addMovieWatchlist(@Body() idObj: idParam, @GetUser() user: User) {
+    const { id } = idObj;
+    return this.movieService.addWatchlist(+id, user);
   }
 }

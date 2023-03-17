@@ -11,8 +11,9 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { CinemaService } from 'src/services/cinema/cinema.service';
 import { CinemaDto } from 'src/services/cinema/create-cinema.dto';
-import { Cinema } from 'src/dal/cinema';
+import { Cinema } from 'src/dal/cinema.entity';
 import { IsAdmin } from 'src/services/auth/custom-decorators/isAdmin.decorator';
+import { idParam } from 'src/interface/index.ts';
 
 @Controller('/cinema')
 @UseGuards(AuthGuard())
@@ -24,6 +25,11 @@ export class CinemaController {
     return this.cinemaService.getCinema();
   }
 
+  @Get('/:id')
+  getCinemaById(@IsAdmin() isAdmin, @Param() param: idParam): Promise<Cinema> {
+    const { id } = param;
+    return this.cinemaService.getCinemaById(+id);
+  }
   @Post()
   createCinema(@Body() body: CinemaDto, @IsAdmin() isAdmin): Promise<Cinema> {
     return this.cinemaService.create(body);
@@ -39,7 +45,13 @@ export class CinemaController {
   }
 
   @Delete('/:id')
-  deleteMovie(@IsAdmin() isAdmin, @Param() param: object) {
-    return this.cinemaService.remove(param);
+  deleteCinema(@IsAdmin() isAdmin, @Param() param: idParam) {
+    const { id } = param;
+    return this.cinemaService.remove(+id);
+  }
+
+  @Post('/:id/movie')
+  addMovieToCinema(@IsAdmin() isAdmin, @Body() movie, @Param() param: object) {
+    return this.cinemaService.addMovie(movie, param);
   }
 }

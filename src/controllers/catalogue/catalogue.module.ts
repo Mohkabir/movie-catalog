@@ -6,12 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from 'src/services/auth/auth.module';
 
 @Module({
-  imports: [
-    forwardRef(() => MovieModule),
-    AccountModule,
-    AuthModule,
-    // PassportModule.register({ defaultStrategy: 'jwt' }),
-  ],
+  imports: [forwardRef(() => MovieModule), AccountModule, AuthModule],
   controllers: [CatalogueController],
   providers: [],
 })

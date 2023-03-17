@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  ManyToMany,
+} from 'typeorm';
+import { Cinema } from './cinema.entity';
 import { User } from './user.entity';
 
 @Entity()
@@ -39,6 +47,13 @@ export class Movie {
   @Column()
   description: string;
 
-  @ManyToOne((_type) => User, (user) => user.movies, { eager: false })
+  @ManyToOne((_type) => User, (user) => user.movies, {
+    eager: false,
+    nullable: false,
+  })
+  @Exclude({ toPlainOnly: true })
   user: User;
+
+  @ManyToMany(() => Cinema, (cinema) => cinema.movies)
+  cinemas: Cinema[];
 }
