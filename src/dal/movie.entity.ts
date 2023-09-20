@@ -47,13 +47,11 @@ export class Movie {
   @Column()
   description: string;
 
-  @ManyToOne((_type) => User, (user) => user.movies, {
-    eager: false,
-    nullable: false,
-  })
-  @Exclude({ toPlainOnly: true })
+  @ManyToOne((_type) => User, (user) => user.movie)
   user: User;
 
-  @ManyToMany(() => Cinema, (cinema) => cinema.movies)
-  cinemas: Cinema[];
+  // @Exclude({ toPlainOnly: true })
+
+  //   @ManyToMany(() => Cinema, (cinema) => cinema.movies)
+  //   cinemas: Cinema[];
 }

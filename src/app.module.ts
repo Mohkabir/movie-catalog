@@ -11,6 +11,9 @@ import { CinemaModule } from './services/cinema/cinema.module';
 import { Cinema } from './dal/cinema.entity';
 import { CinemaMovie } from './dal/cinema.movie.entity';
 import { Watchlist } from './dal/watchlist.entity';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule } from '@nestjs/schedule';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   imports: [
@@ -25,10 +28,13 @@ import { Watchlist } from './dal/watchlist.entity';
       synchronize: true,
       entities: [Movie, User, Cinema, CinemaMovie, Watchlist],
     }),
+    EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
     CatalogueModule,
     AccountModule,
     UserModule,
     CinemaModule,
+    GatewayModule,
   ],
 
   controllers: [AppController],

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -52,11 +53,6 @@ export class CinemaService {
       .createQueryBuilder('e')
       .andWhere(`e.cinemaId=${id}`, { id });
 
-    // .createQueryBuilder('e')
-    // .select('e.movie_id')
-    // .where('e.cinemaId=id', { id })
-    // .getMany();
-
     this.logger.debug(query.getSql());
 
     const movies = await query.getMany();
@@ -66,7 +62,7 @@ export class CinemaService {
       movies: movies.map((item) => {
         return {
           movie: item.movieId,
-          time: item.time,
+          date_time: item.date_time,
         };
       }),
     };
@@ -92,11 +88,25 @@ export class CinemaService {
   }
 
   async addMovie(movieInfo, param): Promise<any> {
-    const res = await this.cinemaMovieRepo.save({
-      movieId: movieInfo.id,
-      cinemaId: +param.id,
-      time: movieInfo.time,
-    });
+    let res;
+    try {
+      res = await this.cinemaMovieRepo.save({
+        movieId: movieInfo.id,
+        cinemaId: +param.id,
+        date_time: movieInfo.date_time,
+      });
+    } catch (error) {
+      console.log(error);
+      if (error.code === '23505') {
+        throw new BadRequestException(
+          'Duplicate error: Cinema in same location cant show one movie same time',
+        );
+      }
+      if (error.code === '23502') {
+        throw new BadRequestException('All feild are requred');
+      }
+      throw new InternalServerErrorException();
+    }
     const cinema = await this.getCinemaById(res.cinemaId);
     // const movie = await this.movie.findOne(res.movieId);
     return cinema;

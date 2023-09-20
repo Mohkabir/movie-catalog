@@ -16,9 +16,6 @@ export class Watchlist {
   @Column()
   movieId: number;
 
-  @ManyToOne((_type) => User, (user) => user.watchlist, {
-    eager: false,
-  })
-  @Exclude({ toPlainOnly: true })
+  @ManyToOne((_type) => User, (user) => user.watchlist)
   user: User;
 }

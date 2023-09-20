@@ -12,9 +12,8 @@ export class Cinema {
   @Column()
   location: string;
 
-  @ManyToMany(() => Movie, (movie) => movie.cinemas, {
-    cascade: true,
-  })
-  // @JoinTable()
-  movies: Movie[];
+  // @ManyToMany(() => Movie, (movie) => movie.cinemas, {
+  //   cascade: true,
+  // })
+  // movies: Movie[];
 }
